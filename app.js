@@ -14,7 +14,9 @@ import {
   getDatabase, 
   ref, 
   push, 
-  onChildAdded, 
+  onChildAdded,
+  onChildChanged,
+  onChildRemoved,
   update,
   remove 
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -169,6 +171,9 @@ onAuthStateChanged(auth, (user) => {
       // Check if user has a username set
       if (!localStorage.getItem('chatUsername')) {
         window.location.href = "user.html";
+      } else {
+        // Initialize chat listeners only after auth is confirmed
+        initializeChatListeners();
       }
     }
   }
@@ -197,56 +202,10 @@ window.sendMessage = function () {
   document.getElementById("message").value = "";
 };
 
-// Function to listen for new messages
-onChildAdded(ref(db, "messages"), function(snapshot) {
-  const data = snapshot.val();
-  const messageBox = document.getElementById("messages");
-  
-  if (!messageBox) return;
-  
-  const messageElement = document.createElement("div");
-  
-  // Determine if message is from current user
-  const isOwnMessage = data.uid === auth.currentUser?.uid;
-  messageElement.className = `message ${isOwnMessage ? 'own' : 'other'}`;
-  
-  // Format timestamp
-  const time = new Date(data.timestamp);
-  const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
-  messageElement.innerHTML = `
-    <div class="message-header">${data.name}</div>
-    <div class="message-text">${data.text}</div>
-    <div class="message-time">${timeString}</div>
-    ${isOwnMessage ? `
-      <div class="message-actions">
-        <button class="message-action edit-btn" data-key="${snapshot.key}">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="message-action delete-btn" data-key="${snapshot.key}">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    ` : ''}
-  `;
-  
-  messageBox.appendChild(messageElement);
-  messageBox.scrollTop = messageBox.scrollHeight;
-  
-  // Add event listeners for edit and delete buttons
-  if (isOwnMessage) {
-    const editBtn = messageElement.querySelector('.edit-btn');
-    const deleteBtn = messageElement.querySelector('.delete-btn');
-    
-    editBtn.addEventListener('click', () => editMessage(snapshot.key, data.text));
-    deleteBtn.addEventListener('click', () => deleteMessage(snapshot.key));
-  }
-});
-
 // Edit message function
 function editMessage(messageKey, currentText) {
   const newText = prompt("Edit your message:", currentText);
-  if (newText !== null && newText !== currentText) {
+  if (newText !== null && newText !== "" && newText !== currentText) {
     update(ref(db, `messages/${messageKey}`), {
       text: newText,
       edited: true
@@ -260,6 +219,81 @@ function deleteMessage(messageKey) {
     remove(ref(db, `messages/${messageKey}`));
   }
 }
+
+// Create message element
+function createMessageElement(snapshot, data) {
+  const messageElement = document.createElement("div");
+  
+  // Determine if message is from current user
+  const isOwnMessage = data.uid === auth.currentUser?.uid;
+  messageElement.className = `message ${isOwnMessage ? 'own' : 'other'}`;
+  messageElement.setAttribute('data-message-id', snapshot.key);
+  
+  // Format timestamp
+  const time = new Date(data.timestamp);
+  const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  messageElement.innerHTML = `
+    <div class="message-header">${data.name}</div>
+    <div class="message-text">${data.text}${data.edited ? ' <span class="edited-badge">(edited)</span>' : ''}</div>
+    <div class="message-time">${timeString}</div>
+    ${isOwnMessage ? `
+      <div class="message-actions">
+        <button class="message-action edit-btn" onclick="editMessage('${snapshot.key}', \`${data.text.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="message-action delete-btn" onclick="deleteMessage('${snapshot.key}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    ` : ''}
+  `;
+  
+  return messageElement;
+}
+
+// Initialize chat listeners
+function initializeChatListeners() {
+  const messageBox = document.getElementById("messages");
+  if (!messageBox) return;
+  
+  // Listen for new messages
+  onChildAdded(ref(db, "messages"), function(snapshot) {
+    const data = snapshot.val();
+    
+    // Check if message already exists
+    if (document.querySelector(`[data-message-id="${snapshot.key}"]`)) {
+      return;
+    }
+    
+    const messageElement = createMessageElement(snapshot, data);
+    messageBox.appendChild(messageElement);
+    messageBox.scrollTop = messageBox.scrollHeight;
+  });
+  
+  // Listen for edited messages
+  onChildChanged(ref(db, "messages"), function(snapshot) {
+    const data = snapshot.val();
+    const existingMessage = document.querySelector(`[data-message-id="${snapshot.key}"]`);
+    
+    if (existingMessage) {
+      const newMessageElement = createMessageElement(snapshot, data);
+      existingMessage.replaceWith(newMessageElement);
+    }
+  });
+  
+  // Listen for deleted messages
+  onChildRemoved(ref(db, "messages"), function(snapshot) {
+    const messageElement = document.querySelector(`[data-message-id="${snapshot.key}"]`);
+    if (messageElement) {
+      messageElement.remove();
+    }
+  });
+}
+
+// Make functions globally accessible
+window.editMessage = editMessage;
+window.deleteMessage = deleteMessage;
 
 // Allow sending message with Enter key
 document.getElementById("message")?.addEventListener("keypress", function(e) {
