@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Auth - Sign Up</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="fade-in">
+    <div class="auth-container">
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Sign up to get started</p>
+      </div>
+
+      <div class="auth-content">
+        <input type="email" id="signup-email" placeholder="Enter your email" required/>
+        <input type="password" id="signup-password" placeholder="Create password" required/>
+        <input type="password" id="confirm-password" placeholder="Confirm password" required/>
+
+        <button id="signup-btn">Sign Up</button>
+        <button id="google-btn" class="google">Continue with Google</button>
+
+        <p>Already have an account? <a href="signin.html">Sign In</a></p>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
