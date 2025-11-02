@@ -15,6 +15,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    transition: background 0.3s ease;
 }
 
 /* === Card Containers === */
@@ -29,6 +30,7 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     animation: slide-up 0.6s ease;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .chat-container {
@@ -100,6 +102,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    transition: background 0.3s ease;
 }
 
 .message {
@@ -108,6 +111,7 @@ body {
     position: relative;
     max-width: 80%;
     word-wrap: break-word;
+    transition: all 0.3s ease;
 }
 
 .message.own {
@@ -134,12 +138,19 @@ body {
     margin-bottom: 5px;
 }
 
+.edited-badge {
+    font-size: 0.7rem;
+    color: #888;
+    font-style: italic;
+}
+
 .message-actions {
     display: flex;
     gap: 5px;
     justify-content: flex-end;
     opacity: 0;
     transition: opacity 0.2s;
+    margin-top: 5px;
 }
 
 .message:hover .message-actions {
@@ -154,6 +165,7 @@ body {
     font-size: 0.8rem;
     padding: 2px 5px;
     width: auto;
+    transition: color 0.2s;
 }
 
 .message-action:hover {
@@ -177,7 +189,7 @@ input {
     border-radius: 0.5rem;
     outline: none;
     font-size: 1rem;
-    transition: border 0.3s;
+    transition: border 0.3s, background 0.3s, color 0.3s;
 }
 
 input:focus {
@@ -276,39 +288,63 @@ a:hover {
 
 /* === Dark Theme === */
 body.dark-theme {
-    background: linear-gradient(135deg, #2c3e50, #4a235a);
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
     color: #f0f0f0;
 }
 
 body.dark-theme .auth-container,
 body.dark-theme .welcome-container,
 body.dark-theme .chat-container {
-    background: #34495e;
+    background: #0f3460;
     color: #f0f0f0;
 }
 
 body.dark-theme .message-box {
-    background: #2c3e50;
+    background: #16213e;
 }
 
+/* Updated Dark Theme Message Colors */
 body.dark-theme .message.own {
-    background: #27ae60;
+    background: linear-gradient(135deg, #e94560, #ff6b95);
     color: white;
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.3);
 }
 
 body.dark-theme .message.other {
-    background: #3498db;
-    color: white;
+    background: #1a1a2e;
+    color: #f0f0f0;
+    border: 1px solid #533483;
+    box-shadow: 0 2px 8px rgba(83, 52, 131, 0.2);
+}
+
+body.dark-theme .message-header {
+    color: #ff8fb1;
+}
+
+body.dark-theme .message-time {
+    color: #aaa;
+}
+
+body.dark-theme .edited-badge {
+    color: #ccc;
 }
 
 body.dark-theme input {
-    background: #2c3e50;
-    border-color: #555;
+    background: #16213e;
+    border-color: #533483;
     color: #f0f0f0;
 }
 
 body.dark-theme input:focus {
     border-color: #ff6b95;
+}
+
+body.dark-theme .message-action {
+    color: #aaa;
+}
+
+body.dark-theme .message-action:hover {
+    color: #ff8fb1;
 }
 
 /* === Animations === */
@@ -381,4 +417,4 @@ body.dark-theme input:focus {
 .auth-container:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(255, 107, 149, 0.25);
-  }
+    }
