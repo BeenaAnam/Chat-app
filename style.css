@@ -1,0 +1,384 @@
+/* === Global Reset === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* === Body === */
+body {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    color: #333;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* === Card Containers === */
+.auth-container,
+.welcome-container,
+.chat-container {
+    background: #fff;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: slide-up 0.6s ease;
+}
+
+.chat-container {
+    max-width: 500px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === Header Section === */
+.auth-header {
+    background: linear-gradient(90deg, #ff6b95, #ff8e8e);
+    padding: 1.5rem;
+    color: #fff;
+}
+
+.auth-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.auth-header p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.chat-header {
+    background: linear-gradient(90deg, #ff6b95, #ff8e8e);
+    padding: 1rem 1.5rem;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h2 {
+    font-size: 1.5rem;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-btn, .logout-btn {
+    width: auto;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    margin-top: 0;
+}
+
+/* === Content Area === */
+.auth-content {
+    padding: 2rem;
+}
+
+.welcome-container {
+    padding: 2rem;
+}
+
+/* === Chat Message Box === */
+.message-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 8px;
+    position: relative;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.message.own {
+    align-self: flex-end;
+    background: #e1ffc7;
+    border-bottom-right-radius: 0;
+}
+
+.message.other {
+    align-self: flex-start;
+    background: #fff;
+    border-bottom-left-radius: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-header {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #ff6b95;
+}
+
+.message-text {
+    margin-bottom: 5px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.message:hover .message-actions {
+    opacity: 1;
+}
+
+.message-action {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    width: auto;
+}
+
+.message-action:hover {
+    color: #ff6b95;
+    background: none;
+    transform: none;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: #888;
+    text-align: right;
+}
+
+/* === Inputs === */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    outline: none;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+input:focus {
+    border-color: #ff6b95;
+}
+
+.message-inputs {
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+}
+
+.message-inputs input {
+    margin: 0;
+    flex: 1;
+}
+
+.message-inputs button {
+    width: auto;
+    margin: 0;
+    padding: 12px 20px;
+}
+
+/* === Buttons === */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, #ff6b95, #ff8e8e);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(255, 107, 149, 0.4);
+}
+
+/* === Google Button === */
+button.google {
+    background: linear-gradient(90deg, #ff8e8e, #ffb6b9);
+}
+button.google:hover {
+    opacity: 0.9;
+}
+
+/* === Links === */
+a {
+    color: #ff6b95;
+    text-decoration: none;
+    font-weight: 500;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* === Loading Spinner === */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ddd;
+    border-top-color: #ff6b95;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+/* === Dark Theme === */
+body.dark-theme {
+    background: linear-gradient(135deg, #2c3e50, #4a235a);
+    color: #f0f0f0;
+}
+
+body.dark-theme .auth-container,
+body.dark-theme .welcome-container,
+body.dark-theme .chat-container {
+    background: #34495e;
+    color: #f0f0f0;
+}
+
+body.dark-theme .message-box {
+    background: #2c3e50;
+}
+
+body.dark-theme .message.own {
+    background: #27ae60;
+    color: white;
+}
+
+body.dark-theme .message.other {
+    background: #3498db;
+    color: white;
+}
+
+body.dark-theme input {
+    background: #2c3e50;
+    border-color: #555;
+    color: #f0f0f0;
+}
+
+body.dark-theme input:focus {
+    border-color: #ff6b95;
+}
+
+/* === Animations === */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.7s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* === Responsive Design === */
+@media (max-width: 480px) {
+    .auth-container,
+    .welcome-container,
+    .chat-container {
+        width: 95%;
+    }
+
+    .auth-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .chat-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .auth-content {
+        padding: 1.5rem;
+    }
+
+    input,
+    button {
+        font-size: 0.9rem;
+    }
+}
+
+.auth-container {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 107, 149, 0.25);
+  }
